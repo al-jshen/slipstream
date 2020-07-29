@@ -1,6 +1,7 @@
 #![feature(proc_macro_hygiene, decl_macro)]
-#[macro_use] extern crate rocket;
-use rocket::response::{Redirect};
+#[macro_use]
+extern crate rocket;
+use rocket::response::Redirect;
 
 #[get("/")]
 fn index() -> &'static str {
@@ -29,7 +30,6 @@ fn main() {
     //rocket::ignite().mount("/", routes![index, search]).launch();
 }
 
-
 #[cfg(test)]
 mod tests {
     // Note this useful idiom: importing names from outer (for mod tests) scope.
@@ -45,8 +45,14 @@ mod tests {
 
     #[test]
     fn test_split_query() {
-        assert_eq!(split_query("gh al-jshen/slipstream"), vec!["gh", "al-jshen/slipstream"]);
-        assert_eq!(split_query("gh al-jshen slipstream"), vec!["gh", "al-jshen", "slipstream"]);
+        assert_eq!(
+            split_query("gh al-jshen/slipstream"),
+            vec!["gh", "al-jshen/slipstream"]
+        );
+        assert_eq!(
+            split_query("gh al-jshen slipstream"),
+            vec!["gh", "al-jshen", "slipstream"]
+        );
         assert_eq!(split_query("yt"), vec!["yt"]);
         assert_eq!(split_query("yt "), vec!["yt"]);
     }
