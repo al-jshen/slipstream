@@ -54,22 +54,3 @@ fn main() {
     //println!("{}", process_query("gh al-jshen/slipstream".to_owned()));
     rocket::ignite().mount("/", routes![index, search]).launch();
 }
-
-#[cfg(test)]
-mod tests {
-    // Note this useful idiom: importing names from outer (for mod tests) scope.
-    use super::*;
-
-    #[test]
-    fn test_split_query() {
-        assert_eq!(
-            split_query("gh al-jshen/slipstream"),
-            ("gh", "al-jshen/slipstream".to_owned()),
-        );
-        assert_eq!(
-            split_query("gh al-jshen slipstream"),
-            ("gh", "al-jshen slipstream".to_owned())
-        );
-        assert_eq!(split_query("yt"), ("yt", "".to_owned()));
-    }
-}
