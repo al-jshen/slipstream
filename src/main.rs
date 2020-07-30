@@ -10,24 +10,34 @@ fn index() -> &'static str {
     "Hello, world!"
 }
 
-// #[get("/search/<query>")]
-// fn search(query: String) -> Redirect {
-//     let (cmd, args) = split_query(&query);
-//     match cmd {
-//         "ads" => process_ads(args), 
-//         _ => process_google(args),
-//     }
-//     let redir_url = "https://google.ca";
-//     Redirect::to(redir_url)
-// }
+#[get("/search/<query>")]
+fn search(query: String) -> Redirect {
+    let url = process_query(query);
+    Redirect::to(url)
+}
+
+fn process_query(query: String) -> String {
+    let (cmd, args) = split_query(&query);
+    match cmd {
+        "ads" => process_ads(args),
+        "gh" => process_github(args),
+        _ => process_google(args),
+    }
+}
 
 fn process_google(args: String) -> String {
-    let base_url = "https://www.google.com/search?q=";
-    println!("{}", args);
     let query = encode::encode(&args);
-    println!("{}", query);
-    format!("{}{}", base_url, query)
+    format!("https://www.google.com/search?q={}", query)
+}
 
+fn process_github(args: String) -> String {
+    format!("https://github.com/{}", args)
+}
+
+fn process_ads(args: String) -> String {
+    let processed = args.replace("y:", "year:").replace("a:", "author:");
+    let query = encode::encode(&processed);
+    format!("https://ui.adsabs.harvard.edu/search/q={}&sort=date%20desc%2C%20bibcode%20desc&p_=0", query)
 }
 
 fn split_query(query: &str) -> (&str, String) {
@@ -38,10 +48,7 @@ fn split_query(query: &str) -> (&str, String) {
 }
 
 fn main() {
-    let (cmd, args) = split_query("gh al-jshen/slipstream");
-    let g_url = process_google(args);
-    println!("{}", g_url);
-    //rocket::ignite().mount("/", routes![index, search]).launch();
+    rocket::ignite().mount("/", routes![index, search]).launch();
 }
 
 #[cfg(test)]
