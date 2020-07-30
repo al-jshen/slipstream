@@ -3,15 +3,16 @@
 extern crate rocket;
 use encoding::encode;
 use rocket::response::Redirect;
+use std::path::PathBuf;
 
 #[get("/")]
 fn index() -> &'static str {
     "Hello, world!"
 }
 
-#[get("/search/<query>")]
-fn search(query: String) -> Redirect {
-    let url = process_query(query);
+#[get("/search/<query..>")]
+fn search(query: PathBuf) -> Redirect {
+    let url = process_query(query.to_str().unwrap().to_owned());
     Redirect::to(url)
 }
 
@@ -20,7 +21,7 @@ fn process_query(query: String) -> String {
     match cmd {
         "ads" => process_ads(args),
         "gh" => process_github(args),
-        _ => process_google(args),
+        _ => process_google([cmd, &args].join(" ")),
     }
 }
 
@@ -50,6 +51,7 @@ fn split_query(query: &str) -> (&str, String) {
 }
 
 fn main() {
+    //println!("{}", process_query("gh al-jshen/slipstream".to_owned()));
     rocket::ignite().mount("/", routes![index, search]).launch();
 }
 
