@@ -1,9 +1,8 @@
 #![feature(proc_macro_hygiene, decl_macro)]
 #[macro_use]
 extern crate rocket;
-use rocket::response::Redirect;
 use encoding::encode;
-
+use rocket::response::Redirect;
 
 #[get("/")]
 fn index() -> &'static str {
@@ -37,7 +36,10 @@ fn process_github(args: String) -> String {
 fn process_ads(args: String) -> String {
     let processed = args.replace("y:", "year:").replace("a:", "author:");
     let query = encode::encode(&processed);
-    format!("https://ui.adsabs.harvard.edu/search/q={}&sort=date%20desc%2C%20bibcode%20desc&p_=0", query)
+    format!(
+        "https://ui.adsabs.harvard.edu/search/q={}&sort=date%20desc%2C%20bibcode%20desc&p_=0",
+        query
+    )
 }
 
 fn split_query(query: &str) -> (&str, String) {
