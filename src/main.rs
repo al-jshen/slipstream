@@ -79,7 +79,10 @@ fn process_maps(args: String) -> String {
 
 fn process_stockprice(args: String) -> String {
     let query = encode::encode(&args);
-    format!("https://finance.yahoo.com/quote/{}?p={}&.tsrc=fin-srch", query, query)
+    format!(
+        "https://finance.yahoo.com/quote/{}?p={}&.tsrc=fin-srch",
+        query, query
+    )
 }
 
 fn split_query(query: &str) -> (&str, String) {
@@ -91,5 +94,7 @@ fn split_query(query: &str) -> (&str, String) {
 
 fn main() {
     //println!("{}", process_query("gh al-jshen/slipstream".to_owned()));
-    rocket::ignite().mount("/", routes![index, help, search]).launch();
+    rocket::ignite()
+        .mount("/", routes![index, help, search])
+        .launch();
 }
